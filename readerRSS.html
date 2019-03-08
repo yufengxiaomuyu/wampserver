@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ajax reader</title>
+</head>
+<body>
+	<form action="">
+		<select name="" id="" onchange="showRSS(this.value)">
+			<option value="">Select an RSS-feed:</option>
+			<option value="Google">Googel News</option>
+			<option value="MSNBC">MSNBC News</option>
+		</select>
+	</form>
+	<div id="ressOutput">RSS-feed will be listed here ...</div>
+
+	<script type="text/javascript">
+		function http(method,url,callback) {
+			if (!window.XMLHttpRequest) {
+				console.log("can't support XMLHttpRequest!");
+				return;
+			} else {
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+						callback(xmlhttp);
+					}
+				};
+				xmlhttp.open(method,url,true);
+				xmlhttp.send();
+			}
+		}
+
+		function showRSS(str) {
+			if (!str) {
+				document.getElementById('ressOutput').innerHTML = '';
+				return;
+			} else {
+				http('GET', 'getRSS.php?q=' + str, (res) => {
+					document.getElementById('ressOutput').innerHTML = res.responseText;
+				})
+			}
+		}
+	</script>
+</body>
+</html>

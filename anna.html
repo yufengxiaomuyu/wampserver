@@ -1,0 +1,104 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+</style>
+</head>
+
+<body>
+	<h1>AJAX 与 PHP</h1>
+	<p><b>尝试在输入框中输入一个名字，如：Anna:</b></p>
+	<form>
+		姓名：<input type="text" onkeyup="showHint(this.value)">
+	</form>
+	<p>返回值：</p>
+	<p id="txtHint"></p>
+	<hr />
+
+	<h1>AJAX 与 MYSQL</h1>
+	<form action="">
+		<select name="user" id="" onchange="showUser(this.value)">
+			<option value="">Select a person:</option>
+			<option value="1">Peter Griffin</option>
+			<option value="2">Lois Griffin</option>
+			<option value="3">Glenn Quagmire</option>
+			<option value="4">Joseph Swanson</option>
+		</select>
+	</form>
+	<p><b>Person info will be listed here.</b></p>
+	<div id="personList"></div>
+	<hr />
+
+	<h1>AJAX 与 XML</h1>
+	<form action="">
+		<select name="cds" id="" onchange="showCD(this.value)">
+			<option value="">Select a CD:</option>
+			<option value="Bob Dylan">Bob Dylan</option>
+			<option value="Bonnie Tyler">Bonnie Tyler</option>
+			<option value="Dolly Parton">Dolly Parton</option>
+		</select>
+	</form>
+	<p><b>CD info will be listed here.</b></p>
+	<div id="cdList"></div>
+	<hr />
+
+
+
+	<script type="text/javascript">
+		//xmlhttp
+		function http(method,url,callback) {
+			if (window.XMLHttpRequest) {
+				var xmlhttp = new XMLHttpRequest();
+			} else {
+				console.log("can't support XMLHttpRequest!");
+				return;
+			}
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+					// console.log(xmlhttp.responseText);
+					callback(xmlhttp);
+				}
+			};
+			xmlhttp.open(method, url, true);
+			xmlhttp.send();
+		}
+
+		function showHint(str) {
+			// console.log(str);
+			if (!str.match(/\w/g) || str.lenght === 0) {
+				document.getElementById('txtHint').innerHTML = '';
+				return;
+			} else {
+				http('GET','gethint.php?q=' + str,(res) => {
+					// console.log(res);
+					document.getElementById('txtHint').innerHTML = res.responseText;
+				});
+			}
+		}
+
+		function showUser(str) {
+			// console.log(str);
+  		if (str === '') {
+  			document.getElementById('personList').innerHTML = '';
+  			return;
+  		} else {
+  			http('GET','getUser.php?q=' + str, (res) => {
+  				document.getElementById('personList').innerHTML = res.responseText;
+  			})
+  		}
+  	}
+
+  	function showCD(str) {
+  		if (str === '') {
+  			document.getElementById('cdList').innerHTML = '';
+  			return;
+  		} else {
+  			http('GET','getCD.php?q=' + str,(res) => {
+  				document.getElementById('cdList').innerHTML = res.responseText;
+  			})
+  		}
+  	}
+  </script>
+
+</body>
+</html>
